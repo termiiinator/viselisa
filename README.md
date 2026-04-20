@@ -69,7 +69,7 @@ set DB_USER=sa
 set DB_PASSWORD=YourStrong!Passw0rd
 set DB_HOST=localhost
 set DB_PORT=1433
-set DB_DRIVER=ODBC Driver 17 for SQL Server
+set DB_DRIVER=ODBC Driver 18 for SQL Server
 ```
 
 > По умолчанию включен SQLite fallback (`USE_SQLITE_FALLBACK=1`) для быстрого локального запуска без SQL Server.
