@@ -1,31 +1,8 @@
 services:
-  db:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: hangman-sqlserver
-    environment:
-      ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "YourStrong!Passw0rd"
-    ports:
-      - "1433:1433"
-    healthcheck:
-      test: ["CMD-SHELL", "pidof sqlservr || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 15
-
   web:
     build: .
     container_name: hangman-web
-    depends_on:
-      db:
-        condition: service_healthy
     environment:
-      USE_SQLITE_FALLBACK: "0"
-      DB_NAME: "hangman_db"
-      DB_USER: "sa"
-      DB_PASSWORD: "YourStrong!Passw0rd"
-      DB_HOST: "db"
-      DB_PORT: "1433"
-      DB_DRIVER: "ODBC Driver 18 for SQL Server"
+      USE_SQLITE_FALLBACK: "1"
     ports:
       - "8000:8000"

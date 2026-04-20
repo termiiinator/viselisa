@@ -32,7 +32,7 @@
   - `styles.css`
   - `app.js`
 - `sql/init_players.sql` — SQL Server скрипт создания и заполнения таблицы `players`.
-- `docker-compose.yml` + `Dockerfile` — запуск Django + MS SQL Server в контейнерах.
+- `docker-compose.yml` + `Dockerfile` — запуск Django в контейнере с SQLite.
 
 ## API
 
@@ -56,23 +56,9 @@
 pip install -r requirements.txt
 ```
 
-### 2) Настроить MS SQL Server
+### 2) Настроить SQLite
 
-1. Создайте БД, например `hangman_db`.
-2. Выполните скрипт `sql/init_players.sql`.
-3. Установите переменные окружения:
-
-```bash
-set USE_SQLITE_FALLBACK=0
-set DB_NAME=hangman_db
-set DB_USER=sa
-set DB_PASSWORD=YourStrong!Passw0rd
-set DB_HOST=localhost
-set DB_PORT=1433
-set DB_DRIVER=ODBC Driver 18 for SQL Server
-```
-
-> По умолчанию включен SQLite fallback (`USE_SQLITE_FALLBACK=1`) для быстрого локального запуска без SQL Server.
+SQLite включен по умолчанию через `USE_SQLITE_FALLBACK=1`, дополнительных переменных не нужно.
 
 ### 3) Применить миграции Django
 
@@ -102,8 +88,6 @@ docker compose up --build
 
 Что делает контейнер `web` автоматически:
 
-- ждет доступности SQL Server;
-- создает БД `hangman_db`, если она отсутствует;
 - выполняет `python manage.py migrate`;
 - выполняет `python manage.py seed_players`;
 - запускает Django на `0.0.0.0:8000`.
