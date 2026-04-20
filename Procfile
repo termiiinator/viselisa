@@ -1,1 +1,1 @@
-web: gunicorn autoexport.wsgi
+web: gunicorn backend_project.wsgi:application
