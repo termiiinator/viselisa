@@ -69,6 +69,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend_project.wsgi.application'
 
+# Store sessions in signed cookies — no DB table required, works on ephemeral filesystems
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
