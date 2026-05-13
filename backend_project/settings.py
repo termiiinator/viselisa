@@ -3,11 +3,17 @@
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-1qfr=khgdmgi-1gb=&2=^i#p*uzg@1u%a)rxfpwh$cy*_g8lm('
-DEBUG = True
-ALLOWED_HOSTS = ['*']
+load_dotenv(BASE_DIR / '.env')
+
+SECRET_KEY = os.environ['SECRET_KEY']
+
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -52,7 +58,6 @@ WSGI_APPLICATION = 'backend_project.wsgi.application'
 
 USE_SQLITE_FALLBACK = os.environ.get('USE_SQLITE_FALLBACK', '1') == '1'
 if USE_SQLITE_FALLBACK:
-    # SQLite fallback helps run demo quickly without SQL Server.
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -65,7 +70,7 @@ else:
             'ENGINE': 'mssql',
             'NAME': os.environ.get('DB_NAME', 'hangman_db'),
             'USER': os.environ.get('DB_USER', 'sa'),
-            'PASSWORD': os.environ.get('DB_PASSWORD', 'YourStrong!Passw0rd'),
+            'PASSWORD': os.environ['DB_PASSWORD'],
             'HOST': os.environ.get('DB_HOST', 'localhost'),
             'PORT': os.environ.get('DB_PORT', '1433'),
             'OPTIONS': {
@@ -88,7 +93,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'frontend']
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
