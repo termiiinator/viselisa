@@ -1,1 +1,1 @@
-web: python manage.py collectstatic --noinput && gunicorn backend_project.wsgi:application --bind 0.0.0.0:$PORT
+web: python manage.py migrate && python manage.py seed_players && python manage.py collectstatic --noinput && gunicorn backend_project.wsgi:application --bind 0.0.0.0:$PORT --workers 2
