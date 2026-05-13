@@ -24,9 +24,8 @@ A full-stack Hangman game built as a Django course project. Each round, a random
 - **Session-based game engine** — state lives server-side, no local storage needed
 - **Progressive hint system** — each mistake reveals one more clue in a fixed order: age → position → shirt number → first club → current club
 - **6-mistake limit** with SVG gallows animation
-- **Dual-database support** — SQLite out of the box, Microsoft SQL Server for production
 - **Static files via WhiteNoise** — single-process deployment, no Nginx required
-- **Management command** to seed / reset players table
+- **Management command** to seed / reset the players table
 
 ---
 
@@ -37,7 +36,7 @@ A full-stack Hangman game built as a Django course project. Each round, a random
 | Language | Python 3.12+ |
 | Web framework | Django 6.0.1 |
 | REST API | Django REST Framework 3.16 |
-| Database | SQLite (dev) · Microsoft SQL Server (prod) |
+| Database | SQLite |
 | Static files | WhiteNoise 6.11 |
 | Frontend | Vanilla HTML · CSS · JavaScript |
 | WSGI server | Gunicorn |
@@ -67,8 +66,6 @@ viselisa/
 │   └── app.js
 ├── .env.example              # Copy to .env and fill in your values
 ├── requirements.txt
-├── Dockerfile
-├── docker-compose.yml
 └── manage.py
 ```
 
@@ -109,7 +106,6 @@ All game logic goes through three endpoints. Game state is persisted in the Djan
 ### Prerequisites
 
 - Python 3.12+
-- pip
 
 ### 1 — Clone
 
@@ -132,16 +128,15 @@ pip install -r requirements.txt
 cp .env.example .env
 ```
 
-Open `.env` and set at least `SECRET_KEY`:
+Open `.env` and set `SECRET_KEY`:
 
 ```env
 SECRET_KEY=your-secret-key-here
 DEBUG=True
 ALLOWED_HOSTS=localhost,127.0.0.1
-USE_SQLITE_FALLBACK=1
 ```
 
-Need a fresh secret key?
+Generate a secret key with:
 
 ```bash
 python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
@@ -164,31 +159,18 @@ Visit **http://localhost:8000**
 
 ---
 
-## Docker
+## Deploying to Railway
 
-```bash
-docker compose up --build
-```
+1. Push the repo to GitHub
+2. Connect the repo in Railway → **New Project → Deploy from GitHub repo**
+3. Go to **Variables** and add:
 
-The container automatically runs `migrate`, `seed_players`, then starts Gunicorn on port **8000**. No extra configuration needed — SQLite is used by default.
+| Variable | Value |
+|---|---|
+| `SECRET_KEY` | *(generate one — see above)* |
+| `DEBUG` | `False` |
 
----
-
-## SQL Server (Production)
-
-Set `USE_SQLITE_FALLBACK=0` and provide credentials in `.env`:
-
-```env
-USE_SQLITE_FALLBACK=0
-DB_NAME=hangman_db
-DB_USER=sa
-DB_PASSWORD=YourStrong!Passw0rd
-DB_HOST=localhost
-DB_PORT=1433
-DB_DRIVER=ODBC Driver 18 for SQL Server
-```
-
-Also install `mssql-django` and the [ODBC Driver 18](https://learn.microsoft.com/en-us/sql/connect/odbc/download-odbc-driver-for-sql-server) for your OS.
+Railway automatically injects `RAILWAY_PUBLIC_DOMAIN` — no `ALLOWED_HOSTS` config needed.
 
 ---
 
@@ -199,13 +181,6 @@ Also install `mssql-django` and the [ODBC Driver 18](https://learn.microsoft.com
 | `SECRET_KEY` | ✅ | — | Django cryptographic secret |
 | `DEBUG` | | `False` | Enable debug mode |
 | `ALLOWED_HOSTS` | | `localhost,127.0.0.1` | Comma-separated allowed hosts |
-| `USE_SQLITE_FALLBACK` | | `1` | `1` = SQLite · `0` = SQL Server |
-| `DB_NAME` | | `hangman_db` | SQL Server database |
-| `DB_USER` | | `sa` | SQL Server user |
-| `DB_PASSWORD` | if MSSQL | — | SQL Server password |
-| `DB_HOST` | | `localhost` | SQL Server host |
-| `DB_PORT` | | `1433` | SQL Server port |
-| `DB_DRIVER` | | `ODBC Driver 18 for SQL Server` | ODBC driver string |
 
 ---
 

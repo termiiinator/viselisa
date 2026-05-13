@@ -1,8 +1,0 @@
-services:
-  web:
-    build: .
-    container_name: hangman-web
-    environment:
-      USE_SQLITE_FALLBACK: "1"
-    ports:
-      - "8000:8000"

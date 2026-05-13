@@ -61,28 +61,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend_project.wsgi.application'
 
-USE_SQLITE_FALLBACK = os.environ.get('USE_SQLITE_FALLBACK', '1') == '1'
-if USE_SQLITE_FALLBACK:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'mssql',
-            'NAME': os.environ.get('DB_NAME', 'hangman_db'),
-            'USER': os.environ.get('DB_USER', 'sa'),
-            'PASSWORD': os.environ['DB_PASSWORD'],
-            'HOST': os.environ.get('DB_HOST', 'localhost'),
-            'PORT': os.environ.get('DB_PORT', '1433'),
-            'OPTIONS': {
-                'driver': os.environ.get('DB_DRIVER', 'ODBC Driver 18 for SQL Server'),
-            },
-        }
-    }
+}
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},

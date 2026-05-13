@@ -3,6 +3,3 @@ djangorestframework==3.16.1
 whitenoise==6.11.0
 python-dotenv==1.2.1
 gunicorn==25.0.0
-
-# Uncomment for SQL Server (USE_SQLITE_FALLBACK=0)
-# mssql-django
