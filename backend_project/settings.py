@@ -15,10 +15,18 @@ DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
-# Railway injects RAILWAY_PUBLIC_DOMAIN automatically — add it without manual config
+# Railway injects RAILWAY_PUBLIC_DOMAIN automatically — no manual config needed
 _railway_domain = os.environ.get('RAILWAY_PUBLIC_DOMAIN')
 if _railway_domain:
     ALLOWED_HOSTS.append(_railway_domain)
+
+# Required for HTTPS POST requests (Django 4+) — covers Railway's proxy
+CSRF_TRUSTED_ORIGINS = [o for o in os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',') if o]
+if _railway_domain:
+    CSRF_TRUSTED_ORIGINS.append(f'https://{_railway_domain}')
+
+# Tell Django it's behind an HTTPS reverse proxy (Railway, nginx, etc.)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
